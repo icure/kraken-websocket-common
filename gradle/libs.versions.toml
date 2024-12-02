@@ -1,0 +1,15 @@
+[versions]
+springBoot = "3.3.5"
+kotlinx = "1.8.1"
+kotlin = "1.9.25"
+
+[libraries]
+springBootWebflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "springBoot" }
+springBootSecurity = { group = "org.springframework.boot", name = "spring-boot-starter-security", version.ref = "springBoot"  }
+kotlinxCoroutinesCore = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx" }
+kotlinxCoroutinesReactor = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-reactor", version.ref = "kotlinx" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+mavenRepository = { id = "com.taktik.gradle.maven-repository", version = "1.0.7" }
+gitVersion = { id = "com.taktik.gradle.git-version", version = "2.0.8-gb47b2d0e35" }

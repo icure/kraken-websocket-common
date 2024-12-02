@@ -1,21 +1,31 @@
 plugins {
-    kotlin("jvm") version "2.0.0"
+    alias(libs.plugins.kotlin)
+    alias(libs.plugins.gitVersion)
+    alias(libs.plugins.mavenRepository)
+    `maven-publish`
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
+group = "com.icure"
+val gitVersion: String? by project
+version = gitVersion ?: "0.0.1-SNAPSHOT"
 
 dependencies {
-    testImplementation(kotlin("test"))
+    implementation(libs.springBootWebflux)
+    implementation(libs.springBootSecurity)
+    implementation(libs.kotlinxCoroutinesCore)
+    implementation(libs.kotlinxCoroutinesReactor)
 }
 
-tasks.test {
-    useJUnitPlatform()
-}
 kotlin {
     jvmToolchain(21)
+
+    compilerOptions {
+        freeCompilerArgs = listOf("-Xjsr305=strict")
+        allWarningsAsErrors = true
+    }
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
