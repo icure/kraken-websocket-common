@@ -3,7 +3,6 @@
  */
 package org.taktik.icure.services.external.http.websocket.operation
 
-import java.io.IOException
 import java.util.UUID
 import com.fasterxml.jackson.databind.ObjectMapper
 import kotlinx.coroutines.flow.Flow
@@ -22,13 +21,21 @@ abstract class BinaryOperation(
 ) : Operation, AsyncProgress {
 	private val log = LogFactory.getLog(BinaryOperation::class.java)
 
-	@Throws(IOException::class)
 	suspend fun binaryResponse(response: Flow<DataBuffer>) {
 		val buffers = response.toList()
-		webSocket.send(Mono.just(webSocket.binaryMessage { dbf -> dbf.join(buffers.map { dbf.wrap(it.asByteBuffer()) }) })).awaitFirstOrNull()
+		webSocket.send(
+			Mono.just(
+				webSocket.binaryMessage { dbf ->
+					dbf.join(buffers.flatMap { buf ->
+						buf.readableByteBuffers().asSequence().map {
+							dbf.wrap(it)
+						}.toList()
+					})
+				}
+			)
+		).awaitFirstOrNull()
 	}
 
-	@Throws(IOException::class)
 	suspend fun errorResponse(e: Exception) {
 		val ed: MutableMap<String, String?> = HashMap()
 		ed["message"] = e.message
@@ -37,7 +44,6 @@ abstract class BinaryOperation(
 		webSocket.send(Mono.just(webSocket.textMessage(objectMapper.writeValueAsString(ed)))).awaitFirstOrNull()
 	}
 
-	@Throws(IOException::class)
 	override suspend fun progress(progress: Double) {
 		val wrapper = HashMap<String, Double>()
 		wrapper["progress"] = progress
