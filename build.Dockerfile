@@ -1,0 +1,11 @@
+FROM eclipse-temurin:21.0.1_12-jdk-alpine AS builder
+ARG repoUsername
+ARG repoPassword
+ENV ORG_GRADLE_PROJECT_repoUsername=$repoUsername
+ENV ORG_GRADLE_PROJECT_repoPassword=$repoPassword
+
+WORKDIR /build
+COPY . ./
+RUN apk --no-cache add bash # for git-version plugin
+
+RUN gradle -x test publish

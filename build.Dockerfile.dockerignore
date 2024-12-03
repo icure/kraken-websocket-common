@@ -1,0 +1,15 @@
+*
+!deployment
+!src
+!libs
+!gradle
+!build.gradle*
+!gradle.properties
+!gradlew
+!settings.gradle*
+!git.version
+!.editorconfig
+!buildSrc/src
+!buildSrc/build.gradle*
+*/build
+*/out
